@@ -24,5 +24,5 @@
 </div>
 </script>
 <div id='main'>
-  <component is='{{view}}' v-ref="main" keep-alive></component>
+  <component is='{{view}}' transition-mode="out-in" id='{{id}}' wait-for="data-loaded"></component>
 </div>

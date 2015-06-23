@@ -2,11 +2,11 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ->
-  Vue.config.async = false
   window.vm = new Vue(
     el: '#main'
     data:
       view: 'c-wel'
+      id: null
     filters:
       tomarked: marked
     components:
@@ -17,12 +17,16 @@ jQuery ->
           currentPage: 1
           posts: []
         template: '#index'
-        ready: ->
+        compiled: ->
           self = this
           $.getJSON "/posts.json?page=#{self.currentPage}", (data)->
             self.posts = data
+            self.$emit('data-loaded')
       'c-show':
         template: '#show'
+        props: ['id']
+        compiled: ->
+          console.log 'c-show compiled'
         data: ->
           id: null
           content: ''
@@ -32,8 +36,10 @@ jQuery ->
             if self.id
               $.getJSON "/posts/#{self.id}.json", (data)->
                 self.$data = data
+                self.$emit('data-loaded')
 
       'c-form':
+        props: ['id']
         data: ->
           id: null
           title: ''
@@ -55,20 +61,21 @@ jQuery ->
             if self.id
               $.getJSON "/posts/#{self.id}.json", (data)->
                 self.$data = data
+                self.$emit('data-loaded')
             else
-                self.$data = {}
+              self.$emit('data-loaded')
   )
   posts = ->
     vm.view = 'c-index'
-    console.log 'index route'
   showPost = (id)->
     vm.view = 'c-show'
-    vm.$.main.$data.id = +id
+    vm.id = +id
   editPost = (id)->
     vm.view = 'c-form'
-    vm.$.main.$data.id = +id
+    vm.id = +id
   newPost = ->
     vm.view = 'c-form'
+    vm.id = 0
 
 
   routes =

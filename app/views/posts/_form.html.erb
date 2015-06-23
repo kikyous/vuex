@@ -9,7 +9,7 @@
         <label for="post_content">Content</label>
         <textarea name="post[content]" rows=10 class="form-control" id="post_content" v-model='content' debounce="300"></textarea>
       </div>
-      <input type="submit" name="commit" value="Create Post" v-on='click: submit' class='btn btn-default'>
+      <input type="submit" name="commit" value="{{id ? 'Update' : 'Create'}}" v-on='click: submit' class='btn btn-default'>
     </form>
   </div>
   <div class="col-md-6">
