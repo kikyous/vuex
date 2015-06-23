@@ -1,0 +1,28 @@
+<script type="text/x-template" id="form">
+<%= render 'form' %>
+</script>
+<script type="text/x-template" id="show">
+<%= render 'show' %>
+</script>
+<script type="text/x-template" id="index">
+<div class="row">
+  <div class="col-md-9">
+    <ul class="list-group">
+      <li v-repeat="posts" class="list-group-item">
+        <a href='#posts/{{id}}'> {{title}} </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">Please login</div>
+      <div class="panel-body">
+        <a href='#posts/new'> New post</a>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+<div id='main'>
+  <component is='{{view}}' v-ref="main" keep-alive></component>
+</div>
