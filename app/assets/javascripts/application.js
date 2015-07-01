@@ -15,4 +15,5 @@
 //= require marked
 //= require director
 //= require vue
+//= require underscore
 //= require_tree .

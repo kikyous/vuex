@@ -7,21 +7,36 @@ jQuery ->
     data:
       view: 'c-wel'
       id: null
+      current_page: 1
     filters:
       tomarked: marked
     components:
       'c-wel':
         template: 'welcome to vuex'
       'c-index':
+        props: ['current_page']
         data: ->
-          currentPage: 1
+          current_page: 1
           posts: []
+        computed:
+          pages: ->
+            _.reject (_.uniq [1, @current_page-2, @current_page-1, @current_page, @current_page+1, @current_page+2]), (i)->
+              i<1
         template: '#index'
+        watch:
+          'current_page': ->
+            this.fetchPosts()
+
         compiled: ->
-          self = this
-          $.getJSON "/posts.json?page=#{self.currentPage}", (data)->
-            self.posts = data
-            self.$emit('data-loaded')
+          this.fetchPosts()
+        methods:
+          fetchPosts: ->
+            self = this
+            $.ajax
+              url: "/posts.json?page=#{self.current_page}"
+              success: (data, status, xhr)->
+                self.posts = data
+                self.$emit('data-loaded')
       'c-show':
         template: '#show'
         props: ['id']
@@ -65,8 +80,13 @@ jQuery ->
             else
               self.$emit('data-loaded')
   )
-  posts = ->
+  posts = (params)->
+    if /\?/.test(window.location.href)
+      current_page = +_.object([window.location.href.split('?')[1].split('=')])['page']
+    else
+      current_page = 1
     vm.view = 'c-index'
+    vm.current_page = current_page
   showPost = (id)->
     vm.view = 'c-show'
     vm.id = +id
@@ -80,11 +100,15 @@ jQuery ->
 
   routes =
     '/': posts
-    '/posts/': posts
+    '/posts': posts
     '/posts/new': newPost
     '/posts/:postId': showPost
     '/posts/:postId/edit': editPost
 
-  router = Router(routes).configure({strict: false})
+  router = Router(routes).configure({html5history: true})
 
   router.init()
+
+  $(document).on 'click', 'a', (e)->
+    e.preventDefault()
+    router.setRoute($(@).attr('href'))

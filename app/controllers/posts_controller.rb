@@ -4,7 +4,13 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    respond_to do |format|
+      format.json do
+        posts = paginate Post.all, per_page: 5
+        render json: posts
+      end
+      format.html
+    end
   end
 
   # GET /posts/1

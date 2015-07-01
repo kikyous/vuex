@@ -9,20 +9,37 @@
   <div class="col-md-9">
     <ul class="list-group">
       <li v-repeat="posts" class="list-group-item">
-        <a href='#posts/{{id}}'> {{title}} </a>
+        <a href='/posts/{{id}}'> {{title}} </a>
       </li>
     </ul>
+    <nav>
+      <ul class="pagination">
+        <li>
+          <a href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li v-repeat='pages' v-class='active: $value==currentPage'>
+          <a href="/posts?page={{$value}}">{{$value}}</a>
+        </li>
+        <li>
+          <a href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">Please login</div>
       <div class="panel-body">
-        <a href='#posts/new'> New post</a>
+        <a href='/posts/new'> New post</a>
       </div>
     </div>
   </div>
 </div>
 </script>
 <div id='main'>
-  <component is='{{view}}' transition-mode="out-in" id='{{id}}' wait-for="data-loaded"></component>
+  <component is='{{view}}' transition-mode="out-in" id='{{id}}' current_page='{{current_page}}' wait-for="data-loaded"></component>
 </div>
